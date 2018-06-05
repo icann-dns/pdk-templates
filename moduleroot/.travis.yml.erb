@@ -70,15 +70,6 @@ matrix:
 <%     end -%>
 <%   end -%>
 <% end -%>
-branches:
-  only:
-    - master
-    - /^v\d/
-<% if @configs['branches'] -%>
-<%   @configs['branches'].each do |branch| -%>
-    - <%= branch %>
-<%   end -%>
-<% end -%>
 notifications:
   email: false
 <% if @configs['deploy'] -%>
