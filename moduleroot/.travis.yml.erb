@@ -77,6 +77,10 @@ matrix:
 notifications:
   email: false
 <% if @configs['deploy'] -%>
+jobs:
+  include:
+    - stage: deploy
+      env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
 deploy:
   provider: puppetforge
   user: <%= @configs['user'] %>
