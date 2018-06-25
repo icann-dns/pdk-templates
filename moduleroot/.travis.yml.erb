@@ -49,21 +49,26 @@ env:
 <%     end -%>
 <%   end -%>
 <% end -%>
-matrix:
+jobs:
   fast_finish: true
   include:
+<% (@configs['includes'] - (@configs['remove_includes'] || []) + (@configs['extras'] || [])).each do |job| -%>
+    - stage: spec and lint
+<%   job.keys.sort.each do |key| -%>
+      <%= key %>: <%= job[key] %>
+<%   end -%>
+<% end -%>
 <% (@configs['docker_sets'] || []).each do |set| -%>
 <%   job = @configs['docker_defaults'].merge(set['options'] || {}) -%>
-    -
+    - stage: acceptence
 <%   job.keys.sort.each do |key| -%>
       <%= key %>: <%= job[key].gsub(/@@SET@@/, set['set']) %>
 <%   end -%>
 <% end -%>
-<% (@configs['includes'] - (@configs['remove_includes'] || []) + (@configs['extras'] || [])).each do |job| -%>
-    -
-<%   job.keys.sort.each do |key| -%>
-      <%= key %>: <%= job[key] %>
-<%   end -%>
+<% if @configs['deploy'] -%>
+  include:
+    - stage: deploy
+      env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
 <% end -%>
 <% if @configs['allow_failures'] -%>
   allow_failures:
@@ -77,10 +82,6 @@ matrix:
 notifications:
   email: false
 <% if @configs['deploy'] -%>
-jobs:
-  include:
-    - stage: deploy
-      env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
 deploy:
   provider: puppetforge
   user: <%= @configs['user'] %>
