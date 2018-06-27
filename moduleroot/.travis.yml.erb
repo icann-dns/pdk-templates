@@ -62,7 +62,8 @@ jobs:
 <%   job = @configs['docker_defaults'].merge(set['options'] || {}) -%>
     - stage: acceptence
 <%   job.keys.sort.each do |key| -%>
-      <%= key %>: <%= job[key].gsub(/@@SET@@/, set['set']) %>
+      <%= key %>: <%= job[key].gsub(/@@SET@@/, set['set']).gsub(/@@TESTMODE@@/, set.fetch('testmode', 'apply') -%>
+      <%- if set.include?('test_tiers') -%> TEST_TIER=<%= set['test_tiers'].join(',') %>
 <%   end -%>
 <% end -%>
 <% if @configs['deploy'] -%>
