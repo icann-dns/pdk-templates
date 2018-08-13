@@ -55,7 +55,7 @@ jobs:
 <% (@configs['includes'] - (@configs['remove_includes'] || []) + (@configs['extras'] || [])).each do |job| -%>
     - stage: spec and lint
 <%   job.keys.sort.each do |key| -%>
-      <%= key %>: <%= job[key] %>
+      <%= key %>: <%= job[key].gsub(/@@SET@@/, set['set']).gsub(/@@TESTMODE@@/, set.fetch('testmode', 'apply')) %>
 <%   end -%>
 <% end -%>
 <% (@configs['docker_sets'] || []).each do |set| -%>
