@@ -551,8 +551,11 @@ Gemfile:
         version: '~> 3.13'
         from_env: BEAKER_VERSION
       - gem: beaker-vagrant
+      - gem: beaker-docker
       - gem: beaker-pe
       - gem: beaker-hostgenerator
+      - gem: beaker-puppet_install_helper
+      - gem: beaker-module_install_helper
         from_env: BEAKER_HOSTGENERATOR_VERSION
       - gem: beaker-rspec
         from_env: BEAKER_RSPEC_VERSION
