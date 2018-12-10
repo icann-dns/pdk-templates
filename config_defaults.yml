@@ -5,6 +5,7 @@
     '*.erb': 'eol=lf'
     '*.pp': 'eol=lf'
     '*.sh': 'eol=lf'
+    '*.epp': 'eol=lf'
 .gitignore:
   required: &ignorepaths
       - '.git/'
@@ -33,9 +34,23 @@
       - '.DS_Store'
 .pdkignore:
   required: *ignorepaths
+  paths:
+    - '/appveyor.yml'
+    - '/.fixtures.yml'
+    - '/Gemfile'
+    - '/.gitattributes'
+    - '/.gitignore'
+    - '/.gitlab-ci.yml'
+    - '/.pdkignore'
+    - '/Rakefile'
+    - '/.rspec'
+    - '/.rubocop.yml'
+    - '/.travis.yml'
+    - '/.yardopts'
+    - '/spec/'
 .travis.yml:
   ruby_versions:
-    - 2.5.0
+    - 2.5.1
   global_env:
     - BEAKER_PUPPET_COLLECTION=puppet6 PUPPET_GEM_VERSION="~> 6.0"
   bundler_args: --without system_tests
@@ -43,7 +58,7 @@
   docker_defaults:
     # values will replace @@SET@@ with the docker_sets' value
     bundler_args: ''
-    rvm: 2.5.0
+    rvm: 2.5.1
     sudo: required
     dist: trusty
     services: docker
@@ -85,6 +100,8 @@ appveyor.yml:
       CHECK: parallel_spec
   test_script:
     - bundle exec rake %CHECK%
+  branches:
+    - master
 Rakefile:
   default_disabled_lint_checks:
     - 'relative'

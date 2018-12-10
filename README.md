@@ -5,7 +5,7 @@ The PDK Templates is the default templates repository for use with the [Puppet D
 * `moduleroot_init` templates get only deployed when the target file does not yet exist; use them to provide skeletons for files the developer needs to modify heavily.
 * `object_templates` templates are used by the various `new ...` commands for classes, defined types, etc.
 
-The PDK also absorbs the `config_defaults.yml` file to apply a set of default configurations to the module. Each top-level key in the file corresponds to a target file, and will be merged with the `:global` section at the top. Within the template evaluation the values are available under `@config`. In the module itself, you can override/amend the values by putting new values into `.sync.yml` in the module's root. You can remove default values by adding the [knockout prefix](https://www.rubydoc.info/gems/puppet/DeepMerge) of `---` to the value in the `.sync.yml`. The data for a target file also use `delete: true` and `unmanaged: true` to remove, or ignore the particular file. 
+The PDK also absorbs the `config_defaults.yml` file to apply a set of default configurations to the module. Each top-level key in the file corresponds to a target file, and will be merged with the `:global` section at the top. Within the template evaluation the values are available under `@config`. In the module itself, you can override/amend the values by putting new values into `.sync.yml` in the module's root. You can remove default values by adding the [knockout prefix](https://www.rubydoc.info/gems/puppet/DeepMerge) of `---` to the value in the `.sync.yml`. The data for a target file also use `delete: true` and `unmanaged: true` to remove, or ignore the particular file.
 
 * [Basic usage](#basic-usage)
 * [Config_default Values](#values)
@@ -53,7 +53,7 @@ Gitlab CI uses a .gitlab-ci.yml file in the root of your repository tell Gitlab 
 | beaker         |Defines if you want the default, Docker-in-Docker acceptance job added. Can be set to `true` to enable the default `acceptance` job, or you can specify the `variables` and `tags` subkeys. These subkeys function the same as the `global_variables` option and the `tags` subkey found in the `ruby_versions` option.|
 | global_variables |Allows you to set any global environment variables for the gitlab-ci pipeline. Currently includes setting the Puppet gem version.|
 | cache          | If this setting exists, it expects a single sub-key called `paths`. `paths` is an array of paths that will be cached for each subsequent job. Defaults to `['vendor/bundle']`|
-| bunder\_args   |Define any arguments you want to pass through to bundler. The default is `--without system_tests --path vendor/bundle --jobs $(nproc)` which avoids installing unnessesary gems while installing them to the `vendor/bundler.|
+| bundler\_args   |Define any arguments you want to pass through to bundler. The default is `--without system_tests --path vendor/bundle --jobs $(nproc)` which avoids installing unnessesary gems while installing them to the `vendor/bundler.|
 | ruby_versions  |Define a list of ruby_versions to test against. Each version can have a series of sub-keys that are options. `checks` is the rake command(s) to run during the job. `puppet_version` sets the PUPPET_GEM_VERSION environment variable. `allow_failure` is an array of `checks` where you want to allow failures. `tags` is an array of Gitlab CI Runner tags.
 | custom_jobs    |Define custom Gitlab CI jobs that will be executed. It is recommended that you use this option if you need customized Gitlab CI jobs. Please see the [.gitlab-ci.yml](https://docs.gitlab.com/ce/ci/yaml/README.html) docs for specifics.|
 | rubygems_mirror | Use a custom rubygems mirror url |
@@ -76,18 +76,21 @@ Travis uses a .travis.yml file in the root of your repository to learn about you
 | :------------- |:--------------|
 | simplecov      |Set to `true` to enable collecting ruby code coverage.|
 | ruby versions  |Define the ruby versions on which you want your builds to be executed.|
-| bunder\_args   |Define any arguments you want to pass through to bundler. The default is `--without system_tests` which avoids installing unnessesary gems.|
+| bundler\_args   |Define any arguments you want to pass through to bundler. The default is `--without system_tests` which avoids installing unnessesary gems.|
 | env            |Allows you to add new travis job matrix entries based on the included environmnet variables, one per `env` entry; for example, for adding jobs with specific `PUPPET_GEM_VERSION` and/or `CHECK` values.  See the [Travis Environment Variables](https://docs.travis-ci.com/user/environment-variables) documentation for details.|
 | global_env     |Allows you to set global environment variables which will be defined for all travis jobs; for example, `PARALLEL_TEST_PROCESSORS` or `TIMEOUT`.  See the [Travis Global Environment Variables](https://docs.travis-ci.com/user/environment-variables/#Global-Variables) documentation for details.|
 |docker_sets     |Allows you to configure sets of docker to run your tests on. For example, if I wanted to run on a docker instance of Ubuntu I would add  `set:docker/ubuntu-14.04` to my docker\_sets attribute.  docker_sets is a hash that supports the 'set' and 'testmode' key|
 |docker_sets['set']| this should refrence the docker nodeset that you wish to run|
 |docker_sets['testmode']| this configueres the `BEAKER_TESTMODE` to use when testing the docker instance.  the two options are `apply` and `agent` if omitted `apply` is used by default|
 |docker_defaults |Defines what values are used as default when using the `docker_sets` definition. Includes ruby version, sudo being enabled, the distro, the services, the env variables and the script to execute.|
+|stages          |Allows you to specify order and conditions for travis-ci build stages. See [Specifying Stage Order and Conditions](https://docs.travis-ci.com/user/build-stages/#specifying-stage-order-and-conditions).|
 |includes        |Ensures that the .travis file includes the following checks by default: Rubocop, Puppet Lint, Metadata Lint.|
 |remove_includes |Allows you to remove includes set in config_defaults.yml.|
 |branches        |Allows you to specify the only branches that travis will run builds on. The default branches are `master` and `/^v\d/`. |
 |branches_except |Allows you to specify branches that travis will not build on.|
 |remove_branches |Allows you to remove default branches set in config_defaults.yml.|
+|notifications   |Allows you to specify the notifications configuration in the .travis.yml file.|
+|remove_notifications   |Allows you to remove default branches set in config_defaults.yml.|
 
 ### .yardopts
 
